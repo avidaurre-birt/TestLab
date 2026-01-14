@@ -239,6 +239,10 @@ pattern {
   width: 30rem;
   padding: 0.4rem;
 
+  & i {
+    color: var(--dark-txt-color);
+  }
+
   & button {
     background-color: var(--logo-color);
     color: var(--light-txt-color);
@@ -288,7 +292,6 @@ pattern {
 
 app-footer-menu {
   background-color: light-dark(var(--light-bg-color), var(--dark-bg-color));
-  /* background-color: transparent; */
   border-top: .1rem solid light-dark(var(--light-border-color), var(--dark-border-color));
 
   & .dropdown-menu {
@@ -470,28 +473,6 @@ app-calendar {
     color: light-dark(var(--dark-txt-color), var(--light-txt-color));
   }
 }
-
-/* .home-background-container {
-  position: relative;
-  width: 100%;
-  height: calc(100% - 18rem);
-}
-
-.home-background {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  z-index: -10;
-  position: absolute;
-  bottom: 0;
-  top: auto;
-  width: 100%;
-  filter: opacity(50%) blur(.2rem);
-  & img {
-    width: 60%;
-  }
-} */
-
 
 .atras {
   cursor: pointer;
