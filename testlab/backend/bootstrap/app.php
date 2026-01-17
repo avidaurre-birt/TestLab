@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Middleware de roles
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'project.member' => \App\Http\Middleware\EnsureUserBelongsToProject::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

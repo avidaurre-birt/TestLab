@@ -71,13 +71,19 @@ export class TokenInterceptor implements HttpInterceptor {
         }
 
         // 401 → No autenticado (token inválido o caducado)
-        // 403 → No autorizado
-        if (error.status === 401 || error.status === 403) {
-          this.toast.show('Sesión expirada o no autorizado', 'error');
-          // this.auth.logout();
+        if (error.status === 401) {
+          this.toast.show('Sesión expirada. Inicia sesión de nuevo.', 'error');
           this.router.navigate(['/login']);
+          return throwError(() => error);
         }
 
+        // 403 → Autenticado pero sin permisos
+        if (error.status === 403) {
+          this.toast.show('No tienes permiso para acceder a este recurso', 'error');
+          this.router.navigate(['/unauthorized']);
+          return throwError(() => error);
+        }
+        
         // 419 → Sesión expirada (CSRF o Sanctum)
         if (error.status === 419) {
           this.toast.show('Sesión expirada. Vuelve a iniciar sesión.', 'error');
