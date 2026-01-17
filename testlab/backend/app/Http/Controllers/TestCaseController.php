@@ -15,7 +15,7 @@ class TestCaseController extends Controller
             $user = auth()->user();
 
             // ADMIN y MANAGER → ven todos los test cases
-            if ($user->rol === 'admin') {
+            if ($user->rol !== 'tester') {
                 $testCases = TestCase::with('versions')->get();
                 return ApiResponse::success($testCases);
             }
@@ -46,6 +46,7 @@ class TestCaseController extends Controller
 
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'objective' => 'required|string',
@@ -59,15 +60,21 @@ class TestCaseController extends Controller
 
         ]);
 
+        $validated['created_by'] = $request->user()->id;
+
         try {
             /*$testCase = TestCase::create($validated);
             return ApiResponse::created($testCase, 'Test case created successfully');*/
+
+
 
             $testCase = TestCase::create(
                 collect($validated)->except('version_ids')->toArray()
             );
 
             $testCase->versions()->attach($validated['version_ids']);
+
+            // $testCase->created_by()->
 
             return ApiResponse::created($testCase->load('versions'));
         } catch (\Exception $e) {
@@ -82,38 +89,43 @@ class TestCaseController extends Controller
         try {
             $testCase = TestCase::findOrFail($id);
 
-            $validated = $request->validate([
-                'title' => 'sometimes|string|max:255',
-                'objective' => 'sometimes|string',
-                'preconditions' => 'nullable|string',
-                'steps' => 'sometimes|array|min:1',
-                'steps.*' => 'string|max:500',
-                'expected_result' => 'sometimes|string',
-                'user_profile' => 'sometimes|string|max:255',
-                'version_ids' => 'sometimes|array|min:1',
-                'version_ids.*' => 'exists:versions,id'
+            if($request->user()->rol === 'admin' || $request->user()->id === $testCase->created_by) {
+                $validated = $request->validate([
+                    'title' => 'sometimes|string|max:255',
+                    'objective' => 'sometimes|string',
+                    'preconditions' => 'nullable|string',
+                    'steps' => 'sometimes|array|min:1',
+                    'steps.*' => 'string|max:500',
+                    'expected_result' => 'sometimes|string',
+                    'user_profile' => 'sometimes|string|max:255',
+                    'version_ids' => 'sometimes|array|min:1',
+                    'version_ids.*' => 'exists:versions,id'
 
-            ]);
+                ]);
 
-            /*$testCase->update($validated);
-            return ApiResponse::updated($testCase, 'Test case updated successfully');*/
+                /*$testCase->update($validated);
+                return ApiResponse::updated($testCase, 'Test case updated successfully');*/
 
 
-            $testCase->update(
-                collect($validated)->except('version_ids')->toArray()
-            );
+                $testCase->update(
+                    collect($validated)->except('version_ids')->toArray()
+                );
 
-            if (isset($validated['version_ids'])) {
-                $testCase->versions()->sync($validated['version_ids']);
+                if (isset($validated['version_ids'])) {
+                    $testCase->versions()->sync($validated['version_ids']);
+                }
+
+                return ApiResponse::updated($testCase->load('versions'));
             }
 
-            return ApiResponse::updated($testCase->load('versions'));
+            return ApiResponse::error('Failed to update test case', 500, 'Unauthorized');
+            
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to update test case', 500, $e->getMessage());
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         try {
             $testCase = TestCase::findOrFail($id);
@@ -124,8 +136,13 @@ class TestCaseController extends Controller
             //     );
             // }
 
-            $testCase->delete();
-            return ApiResponse::deleted('Test case deleted successfully');
+            if($request->user()->rol === 'admin' || $request->user()->id === $testCase->created_by) {
+                $testCase->delete();
+                return ApiResponse::deleted('Test case deleted successfully');
+            }
+
+            return ApiResponse::error('Failed to delete test case', 500, 'Unauthorized');
+
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to delete test case', 500, $e->getMessage());
         }
