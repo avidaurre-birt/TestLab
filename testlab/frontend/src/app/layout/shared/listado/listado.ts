@@ -54,7 +54,7 @@ import { ViewEncapsulation } from '@angular/core';
     MatPaginatorModule,
     MatSortModule
   ],
-  templateUrl: './listado2.html',
+  templateUrl: './listado.html',
   styleUrl: './listado.css',
   encapsulation: ViewEncapsulation.None
 

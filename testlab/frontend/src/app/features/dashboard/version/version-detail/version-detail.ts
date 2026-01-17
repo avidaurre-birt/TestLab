@@ -155,6 +155,8 @@ export class VersionDetail {
         const modal = Modal.getInstance(modalEl);
         modal?.hide();
       }
+
+      this.form.reset();
     }
   }
 

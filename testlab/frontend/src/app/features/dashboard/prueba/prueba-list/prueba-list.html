@@ -3,6 +3,7 @@
 
 <div class="d-flex justify-content-between mb-5">
   <h1>Pruebas</h1>
+@if (role() !== 'tester') {
   <button type="button"
           class="btn btn-nuevo"
           data-bs-toggle="modal"
@@ -10,6 +11,8 @@
           (click)="abrirNuevaPrueba()">
     <i class="bi bi-plus-lg"></i> Nueva prueba
   </button>
+}
+  
 </div>
 
 <app-listado [(itemSelId)]="this.pruebaSelId"

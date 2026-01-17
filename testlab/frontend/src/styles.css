@@ -300,6 +300,10 @@ app-footer-menu {
     background-color: light-dark(var(--light-bg-color), var(--dark-bg-color));
     color: light-dark(var(--dark-txt-color), var(--light-txt-color));
 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     & i:hover {
       background-color: none !important;
     }
@@ -322,8 +326,8 @@ app-footer-menu {
     background-image: none !important;
   }
 
-  mat-paginator {
-    margin-bottom: 9rem;
+  mat-paginator, app-listado {
+    padding-bottom: 9rem;
   }
 
   .hidden-1399-nombre, .hidden-1399-salir {
@@ -730,6 +734,10 @@ form,
 .form-control,
 .btn {
   font-size: 2rem;
+}
+
+.btn {
+  padding: 1rem;
 }
 
 form input + div,
