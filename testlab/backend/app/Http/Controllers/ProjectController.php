@@ -59,6 +59,12 @@ class ProjectController extends Controller
                 $project->users()->sync($validated['user_ids']);
             }
 
+            // Si el user es manager, asocia al creador al proyecto recien creado
+            if($request->user()->rol === 'manager') {
+                $project->users()->sync($request->user()->id);
+            }
+            
+
             return ApiResponse::created($project, 'Project created successfully');
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to create project', 500, $e->getMessage());
@@ -66,10 +72,20 @@ class ProjectController extends Controller
     }
 
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         try {
+            
             $project = Project::findOrFail($id);
+        
+            // Check if the user is an admin or is associated with the project or is the creator
+            $isAdmin = $request->user()->rol === 'admin';
+            $isCreator = $request->user()->id === $project->created_by;
+            $isAssociated = $project->users->contains($request->user()->id);
+
+            if (!$isAdmin && !$isCreator && !$isAssociated) {
+                return ApiResponse::error('Not authorized', 500);
+            }
 
             return ApiResponse::success($project);
         } catch (\Exception $e) {
@@ -127,55 +143,64 @@ class ProjectController extends Controller
     //------ Assignacion de usuarios ------//
 
     // Añadir usuarios sin eliminar existentes
-public function addUser(Project $project, User $user)
-{
-    try {
-        $project->users()->syncWithoutDetaching([$user->id]);
-
-        return ApiResponse::success(
-            $project->load('users'),
-            'User assigned successfully'
-        );
-
-    } catch (\Exception $e) {
-        return ApiResponse::error('Failed to assign user', 500, $e->getMessage());
-    }
-}
-
-    // Remover usuarios
-    public function removeUsers(Request $request, Project $project)
+    public function addUser(Project $project, User $user)
     {
-        $validated = $request->validate([
-            'user_id'   => 'required|exists:users,id',
-        ]);
-
         try {
-            $project->users()->detach($validated['user_id']); // elimina solo los indicados
-            return ApiResponse::success($project->load('users'), 'Users removed successfully');
+            $project->users()->syncWithoutDetaching([$user->id]);
+
+            return ApiResponse::success(
+                $project->load('users'),
+                'User assigned successfully'
+            );
+
         } catch (\Exception $e) {
-            return ApiResponse::error('Failed to remove users', 500, $e->getMessage());
+            return ApiResponse::error('Failed to assign user', 500, $e->getMessage());
         }
     }
 
-public function removeUser(Project $project, User $user)
-{
-    $project->users()->detach($user->id);
+        // Remover usuarios
+        public function removeUsers(Request $request, Project $project)
+        {
+            $validated = $request->validate([
+                'user_id'   => 'required|exists:users,id',
+            ]);
 
-    // Recargar desde BD, no desde la relación cacheada
-    $project->load('users');
+            try {
+                $project->users()->detach($validated['user_id']); // elimina solo los indicados
+                return ApiResponse::success($project->load('users'), 'Users removed successfully');
+            } catch (\Exception $e) {
+                return ApiResponse::error('Failed to remove users', 500, $e->getMessage());
+            }
+        }
 
-    return ApiResponse::success([
-        'users' => $project->users()->get()->values()
-    ]);
-}
+    public function removeUser(Project $project, User $user)
+    {
+        $project->users()->detach($user->id);
+
+        // Recargar desde BD, no desde la relación cacheada
+        $project->load('users');
+
+        return ApiResponse::success([
+            'users' => $project->users()->get()->values()
+        ]);
+    }
 
     /**
      * Datos para dashboard de un proyecto
      */
-    public function dashboard($projectId)
+    public function dashboard(Request $request, $projectId)
     {
         try {
             $project = Project::with(['versions.testCases', 'versions.testExecutions'])->findOrFail($projectId);
+
+            // Comprobar si el usuario es admin, si es el creador o si está asociado
+            $isAdmin = $request->user()->rol === 'admin';
+            $isCreator = $request->user()->id === $project->created_by;
+            $isAssociated = $project->users->contains($request->user()->id);
+
+            if (!$isAdmin && !$isCreator && !$isAssociated) {
+                return ApiResponse::error('Not authorized', 500);
+            }
             
             $project = Project::with([
                 'versions.testCases',
@@ -185,7 +210,7 @@ public function removeUser(Project $project, User $user)
             ])->findOrFail($projectId);
             // return ApiResponse::success($projectId);
 
-
+            
             
             $totalTestCases = 0;
             $totalExecutions = 0;

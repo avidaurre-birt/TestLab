@@ -20,7 +20,8 @@ class TestCase extends Model
         'preconditions',
         'steps',
         'expected_result',
-        'user_profile'
+        'user_profile',
+        'created_by'
     ];
 
     protected $casts = [
