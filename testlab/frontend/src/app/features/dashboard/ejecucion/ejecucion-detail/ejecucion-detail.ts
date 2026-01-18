@@ -50,9 +50,7 @@ export class EjecucionDetail {
     effect(() => {
       if(this.modo() == 'nuevo') {
         console.log('Reseteo del formulario de ejecucion-detail');
-        this.form.reset({
-          executed_at: this.toISOStringLocal(),
-        });
+        this.resetearFormulario();
       }
       
       
@@ -65,7 +63,7 @@ export class EjecucionDetail {
 
   /*** Recuperación de versión ***/
   getEjecucionById(id: string): void {
-    console.log('En propiedad getEjecucionById');
+    this.resetearFormulario();
     this._ejecucionService.getEjecucionById(id).subscribe({
       next: (datos) => {
 
@@ -146,12 +144,10 @@ export class EjecucionDetail {
               )
             );
             this._toastService.show('Ejecución actualizada correctamente', 'success');
-            this.resetearFormulario();
           },
           error: (err) => {
             console.error('Error actualizando ejecución:', err);
             this._toastService.show('Error actualizando ejecución', 'error');
-            this.resetearFormulario();
           }
         });
       } else if (this.modo() === 'nuevo') {
@@ -165,7 +161,6 @@ export class EjecucionDetail {
           next: (datos) => {
             this.listado.update((listado) => ([...listado, datos.data]));
             this._toastService.show('Ejecución creada correctamente', 'success');
-            this.resetearFormulario();
           },
           error: (err) => {
             console.error('Error creando ejecución:', err);
@@ -177,7 +172,6 @@ export class EjecucionDetail {
       const modalEl = document.getElementById('detalleEjecucionModal');
       if (modalEl) {
         const modal = Modal.getInstance(modalEl);
-        this.form.reset(); 
         modal?.hide();
       }
     }

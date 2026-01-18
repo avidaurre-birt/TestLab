@@ -41,6 +41,7 @@ export class VersionDetail {
     effect(() => {
       if (this.versionId() != null) {
         console.log('Cambia la versión', this.versionId());
+        this.resetearFormulario();
         this.getVersionById(this.versionId()!);
       }
 
@@ -55,19 +56,15 @@ export class VersionDetail {
       }
 
       if (this.modo() === 'nuevo') {
-        // this.form.reset({
-        //   version_number: '',
-        //   release_date: '',
-        //   description: '',
-        //   // No reseteamos el id de proyecto para no perderlo
-        // });
+        this.resetearFormulario();
       }
     });
   }
 
   /*** Recuperación de versión ***/
   getVersionById(id: string): void {
-    console.log('En propiedad getVersionById');
+    this.resetearFormulario();
+
     this._versionService.getVersionById(id).subscribe({
       next: (datos) => {
 
@@ -118,8 +115,6 @@ export class VersionDetail {
   onSubmit() {
     if (this.form.valid) {
 
-      console.log('Valores formulario', this.form.value);
-
       if (this.modo() === 'editar' && this.versionId()) {
         this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
           next: () => {
@@ -155,12 +150,14 @@ export class VersionDetail {
         const modal = Modal.getInstance(modalEl);
         modal?.hide();
       }
-
-      this.form.reset();
     }
   }
 
   get formControls() {
     return this.form.controls;
+  }
+
+  resetearFormulario() {
+    this.form.reset();
   }
 }

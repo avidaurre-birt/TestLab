@@ -69,16 +69,7 @@ export class PruebaDetail {
 
       if (this.modo() === 'nuevo') {
         this.loading = false;
-        this.form.reset({
-          title: '',
-          objective: '',
-          preconditions: '',
-          steps: '',
-          expected_result: '',
-          rol: '',
-          project_id: '',
-          version_ids: []
-        });
+        this.resetearFormulario();
       }
     });
     effect(() => {
@@ -122,7 +113,7 @@ export class PruebaDetail {
   /*** Cargar prueba ***/
   getItemById(id: string): void {
     this.loading = true;
-    this.form.reset();
+    this.resetearFormulario();
 
     this._pruebaService.getPruebaById(id, { silent: true }).subscribe({
       next: (res) => {
@@ -276,5 +267,18 @@ export class PruebaDetail {
 
   get formControls() {
     return this.form.controls;
+  }
+
+  resetearFormulario() {
+    this.form.reset({
+      title: '',
+      objective: '',
+      preconditions: '',
+      steps: '',
+      expected_result: '',
+      rol: '',
+      project_id: '',
+      version_ids: []
+    });
   }
 }

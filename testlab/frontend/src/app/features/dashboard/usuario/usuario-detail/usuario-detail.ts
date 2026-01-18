@@ -52,12 +52,7 @@ export class UsuarioDetail {
     effect(() => {
 
       this.loading = true;
-      this.form.reset({
-          name: '',
-          email: '',
-          password: '',
-          rol: ''
-      });
+      this.resetearFormulario();
       if (this.usuarioId() != null) {
         console.log('Cambia el usuario');
         this.getUsuarioById(this.usuarioId()!);
@@ -83,6 +78,7 @@ export class UsuarioDetail {
 
   /*** Recuperación de Usuario ***/
   getUsuarioById(id: string): void {
+    this.resetearFormulario();
     this._usuarioService.getUsuarioById(id, { silent: true }).subscribe({
       next: (datos) => {
         console.log(datos);
@@ -180,7 +176,7 @@ export class UsuarioDetail {
         });
       }
 
-      this.resetearFormulario();
+      
     }
   }
 

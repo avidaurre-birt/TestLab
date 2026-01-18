@@ -37,7 +37,10 @@ export class ProyectoNew {
       status: ['', [Validators.required]],
     });
 
+    this.resetearFormulario();
+
     effect(() => {
+      this.resetearFormulario();
       if (this.modo() === 'editar' && this.proyectoId()) { // Obtiene los datos y los muestra en el modal con símbolo de validado
         this._proyectoService.getProyectoById(this.proyectoId()!).subscribe(proyecto => {
           this.form.patchValue({
@@ -132,7 +135,7 @@ export class ProyectoNew {
         modal?.hide();
       }
 
-      this.resetearFormulario();
+      
     }
   }
 
