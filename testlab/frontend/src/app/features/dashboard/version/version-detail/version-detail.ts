@@ -54,14 +54,10 @@ export class VersionDetail {
         });
       }
 
-      if (this.modo() === 'nuevo') {
-        // this.form.reset({
-        //   version_number: '',
-        //   release_date: '',
-        //   description: '',
-        //   // No reseteamos el id de proyecto para no perderlo
-        // });
-      }
+      // if (this.modo() === 'nuevo') {
+      //   this.resetFormForNew();
+      // }
+
     });
   }
 
@@ -156,11 +152,25 @@ export class VersionDetail {
         modal?.hide();
       }
 
-      this.form.reset();
+        this.resetFormForNew();
     }
   }
 
   get formControls() {
     return this.form.controls;
   }
+
+  private resetFormForNew(): void {
+  this.form.patchValue({
+    version_number: '',
+    release_date: '',
+    description: '',
+    project_id: this.projectId() ?? ''
+  });
+
+  Object.values(this.form.controls).forEach(control => {
+    control.markAsPristine();
+    control.markAsUntouched();
+  });
+}
 }
