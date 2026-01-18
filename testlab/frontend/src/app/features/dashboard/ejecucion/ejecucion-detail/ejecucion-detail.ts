@@ -177,6 +177,8 @@ export class EjecucionDetail {
         this.form.reset(); 
         modal?.hide();
       }
+
+      this.resetearFormulario();
     }
   }
 
@@ -208,5 +210,11 @@ export class EjecucionDetail {
     if (/Linux/i.test(ua)) return 'Linux';
 
     return 'Unknown';
+  }
+
+  resetearFormulario() {
+    this.form.reset({
+        executed_at: this.toISOStringLocal(),
+    });
   }
 }

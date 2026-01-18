@@ -100,11 +100,10 @@
   <!-- Acciones -->
   <div class="d-flex justify-content-evenly mt-5">
     @if (this.modo() === 'editar') {
-      <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
-      <button type="button" class="btn btn-danger" (click)="borrar(this.versionId())" data-bs-dismiss="modal">Eliminar ejecución</button> 
+      <button type="button" class="btn btn-secondary" (click)="this.resetearFormulario()" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
       <button type="submit" class="btn btn-primary" [disabled]="this.form.invalid"  data-bs-dismiss="modal">Guardar cambios</button>
     } @else {
-      <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+      <button type="button" class="btn btn-secondary" (click)="this.resetearFormulario()" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
       <button type="submit" class="btn btn-success" [disabled]="this.form.invalid" data-bs-dismiss="modal">Registrar ejecución</button>
     }
   </div>

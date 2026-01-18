@@ -60,7 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //TESTEXECUTION
     Route::get('/test-executions', [TestExecutionController::class, 'index'])->middleware(['role:admin,manager,tester']); // Listar testexecution
     Route::post('/test-executions', [TestExecutionController::class, 'store'])->middleware(['role:admin,manager,tester']); // Crear testExecution
-    Route::get('/test-executions/{id}', [TestExecutionController::class, 'show'])->middleware(['role:admin,manager']); // Ver un testExecution
+    Route::get('/test-executions/{id}', [TestExecutionController::class, 'show'])->middleware(['role:admin,manager,tester']); // Ver un testExecution
     Route::put('/test-executions/{id}', [TestExecutionController::class, 'update'])->middleware(['role:admin,manager,tester']); // Actualizar testexecution
     Route::delete('/test-executions/{id}', [TestExecutionController::class, 'destroy'])->middleware(['role:admin,manager']); // Eliminar testexecution
 

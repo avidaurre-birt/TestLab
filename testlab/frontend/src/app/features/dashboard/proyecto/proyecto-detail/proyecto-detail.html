@@ -117,7 +117,7 @@
                   </div>
 
                   <!-- Acciones -->
-                  @if (role() === 'admin') {
+                  @if (role() !== 'tester') {
                   <div class="acciones">
                     <i class="bi bi-trash fs-3 text-danger" (click)="disociarUsuario(u.id)" title="Eliminar usuario del proyecto"></i>
                   </div>
@@ -215,6 +215,7 @@
 
       <div class="d-flex justify-content-between align-items-end mb-3">
         <h2>Casos de prueba asociados al proyecto</h2>
+        @if (role() !== 'tester') {
         <button type="button"
           class="btn btn-nuevo"
           data-bs-toggle="modal"
@@ -222,6 +223,8 @@
           (click)="abrirAsociarPrueba(this.proyectoId()!)">
           <i class="bi bi-plus-lg"></i> Asociar nueva prueba
         </button>
+      }
+        
       </div>
 
       @if(pruebas.length) {

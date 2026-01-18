@@ -131,11 +131,17 @@ export class ProyectoNew {
         const modal = Modal.getInstance(modalEl);
         modal?.hide();
       }
+
+      this.resetearFormulario();
     }
   }
 
   get formControls() {
     return this.form.controls;
+  }
+
+  resetearFormulario() {
+    this.form.reset();
   }
 
 }

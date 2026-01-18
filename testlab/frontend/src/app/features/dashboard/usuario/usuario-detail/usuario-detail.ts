@@ -180,13 +180,7 @@ export class UsuarioDetail {
         });
       }
 
-      // setTimeout(() => {
-      //   const modalEl = document.getElementById('detalleModal');
-      //   if (modalEl) {
-      //     const modal = Modal.getInstance(modalEl);
-      //     modal?.hide();
-      //   }
-      // });
+      this.resetearFormulario();
     }
   }
 
@@ -195,4 +189,9 @@ export class UsuarioDetail {
   get formControls() {
     return this.form.controls;
   }
+
+  resetearFormulario() {
+    this.form.reset();
+  }
+
 }
