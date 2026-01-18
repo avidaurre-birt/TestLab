@@ -152,7 +152,6 @@ export class ProyectoDetail {
 
           // Usuarios del proyecto
           this.usuarios = dashboard.users;
-          console.log('usuarios', this.usuarios);
 
           // Pruebas → vienen dentro de test cases de cada versión:
           this.pruebas = dashboard.versions_summary
@@ -160,11 +159,9 @@ export class ProyectoDetail {
 
           // Versiones del proyecto
           this.versiones = dashboard.project.versions;
-          console.log("versiones",this.versiones);
 
           // Ejecuciones del proyecto
           this.ejecuciones = dashboard.latest_executions;
-          console.log("las pruebitas", this.pruebas);
         },
         error: () => {
           this._toastService.show('No se pudo cargar el proyecto', 'error');

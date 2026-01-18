@@ -782,7 +782,7 @@ mat-paginator, mat-select, mat-option, .mat-mdc-select-value-text {
 
 .toast-wrapper {
   bottom: 20%;
-  z-index: 2000;
+  z-index: 4000;
   width: 100%;
   display: flex;
   flex-direction: column;

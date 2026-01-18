@@ -40,6 +40,7 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        return response()->json(['message' => $request->user()]);
         $validated = $request->validate([
             'name'        => 'required|string|max:255|unique:projects,name',
             'description' => 'nullable|string',

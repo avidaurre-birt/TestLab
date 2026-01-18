@@ -26,14 +26,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->middleware(['role:admin,manager,tester']); // Listar proyectos
     // Route::get('/projects/byrole', [ProjectController::class, 'indexByRole'])->middleware(['role:admin,manager,tester']); // Listar proyectos
     Route::post('/projects', [ProjectController::class, 'store'])->middleware(['role:admin,manager']); // Crear proyecto
-    Route::get('/projects/{id}', [ProjectController::class, 'show'])->middleware(['role:admin,manager,tester', 'project.member']); // Ver un proyecto
+    Route::get('/projects/{id}', [ProjectController::class, 'show'])->middleware(['role:admin,manager,tester']); // Ver un proyecto
     Route::put('/projects/{id}', [ProjectController::class, 'update'])->middleware(['role:admin,manager']); // Actualizar proyecto
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->middleware(['role:admin,manager']); // Eliminar proyecto
     Route::post('projects/{project}/users', [ProjectController::class, 'addUsers'])->middleware(['role:admin,manager']); // Anadir usuarios a un proyecto
     Route::delete('projects/{project}/users', [ProjectController::class, 'removeUsers'])->middleware(['role:admin,manager']); // Remove usuarios a un proyecto
     Route::delete('projects/{project}/users/{user}', [ProjectController::class, 'removeUser'])->middleware(['role:admin,manager']); // Remove usuario de un proyecto
     Route::post('projects/{project}/users/{user}', [ProjectController::class, 'addUser'])->middleware(['role:admin,manager']); // Add usuarios a un proyecto
-    Route::get('/projects/{id}/dashboard', [ProjectController::class, 'dashboard'])->middleware(['role:admin,manager,tester', 'project.member']);
+    Route::get('/projects/{id}/dashboard', [ProjectController::class, 'dashboard'])->middleware(['role:admin,manager,tester']);
 
     //VERSIONS
     Route::get('/versions', [VersionController::class, 'index'])->middleware(['role:admin,manager,tester']); // Listar versiones

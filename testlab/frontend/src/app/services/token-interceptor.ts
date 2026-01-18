@@ -71,11 +71,15 @@ export class TokenInterceptor implements HttpInterceptor {
         }
 
         // 401 → No autenticado (token inválido o caducado)
-        if (error.status === 401) {
+        if (error.status === 401 && !req.url.includes('/login')) {
           this.toast.show('Sesión expirada. Inicia sesión de nuevo.', 'error');
           this.router.navigate(['/login']);
           return throwError(() => error);
+        } else if (error.status === 401 && req.url.includes('/login')) {
+          this.toast.show('Credenciales inválidas', 'error');
+          return throwError(() => error);
         }
+
 
         // 403 → Autenticado pero sin permisos
         if (error.status === 403) {
