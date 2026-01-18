@@ -4,6 +4,46 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
+/*************** TIPOS ************************/
+
+/* Normal (Regular) */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400; /* Adjust weight as needed */
+    src: url('../public/fonts/Inter-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+/* Italic */
+@font-face {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 400; /* Match the regular weight */
+    src: url('../public/fonts/Inter-Italic.woff2') format('woff2');
+    font-display: swap;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700; /* Bold weight */
+    src: url('../public/fonts/Inter-Bold.woff2') format('woff2');
+    font-display: swap;
+}
+
+/* Bold Italic */
+@font-face {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 700; /* Bold italic weight */
+    src: url('../public/fonts/Inter-BoldItalic.woff2') format('woff2');
+    font-display: swap;
+}
+
+
+
 /********************** GENERAL ****************************************/
 
 :root {
@@ -29,7 +69,7 @@
 }
 
 body {
-  --bs-body-font-family: Inter, var(--bs-font-sans-serif);
+  --bs-body-font-family: 'Inter', var(--bs-font-sans-serif) !important;
   --bs-body-font-size: 1.6rem;
   height: 100vh;
   max-height: 100vh;
