@@ -159,7 +159,7 @@ export class EjecucionDetail {
 
         this._ejecucionService.createEjecucion(this.form.value).subscribe({
           next: (datos) => {
-            this.listado.update((listado) => ([...listado, datos.data]));
+            this.listado.update((listado) => ([datos.data, ...listado]));
             this._toastService.show('Ejecución creada correctamente', 'success');
           },
           error: (err) => {
