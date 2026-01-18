@@ -18,18 +18,21 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-
-
             // Si es tester → solo proyectos donde participa
             if ($user->rol !== 'admin') {
-                $projects = Project::whereHas('users', function ($q) use ($user) {
-                    $q->where('user_id', $user->id);
+                $projects = Project::where(function ($q) use ($user) {
+                    // Proyectos a los que está asociado
+                    $q->whereHas('users', function ($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    // Y proyectos creados por el usuario (manager)
+                    ->orWhere('created_by', $user->id); 
                 })->get();
 
                 return ApiResponse::success($projects);
             }
 
-            // Admin y manager → todos los proyectos
+            // Admin  → todos los proyectos
             $projects = Project::all();
             return ApiResponse::success($projects);
 

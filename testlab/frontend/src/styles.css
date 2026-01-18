@@ -263,6 +263,14 @@ pattern {
   & input {
     padding-left: 4rem;
   }
+
+  .text-danger {
+    display: flex;
+    height: 1rem;
+    justify-content: center;
+    padding: 1rem;
+  }
+
 }
 
 /******************** CONTENEDOR PRINCIPAL ********************/
@@ -790,7 +798,7 @@ mat-paginator, mat-select, mat-option, .mat-mdc-select-value-text {
 
 .toast-wrapper {
   bottom: 20%;
-  z-index: 2000;
+  z-index: 4000;
   width: 100%;
   display: flex;
   flex-direction: column;

@@ -112,32 +112,42 @@ class TestExecutionController extends Controller
         try {
             $testExecution = TestExecution::findOrFail($id);
 
-            $validated = $request->validate([
-                'result' => 'sometimes|in:passed,failed,blocked,pending',
-                'comment' => 'nullable|string',
-                'test_data' => 'nullable|array',
-                'error_status' => 'sometimes|in:critical,high,medium,low,none',
-                'correction_notes' => 'nullable|string',
-                'observations' => 'nullable|string',
-                'executed_at' => 'sometimes|date'
-            ]);
+            if($request->user()->rol !== 'tester' || $request->user()->id === $testExecution->user_id) {
 
-            $testExecution->update($validated);
-            $testExecution->load(['testCase', 'version', 'user']);
+                $validated = $request->validate([
+                    'result' => 'sometimes|in:passed,failed,blocked,pending',
+                    'comment' => 'nullable|string',
+                    'test_data' => 'nullable|array',
+                    'error_status' => 'sometimes|in:critical,high,medium,low,none',
+                    'correction_notes' => 'nullable|string',
+                    'observations' => 'nullable|string',
+                    'executed_at' => 'sometimes|date'
+                ]);
 
-            return ApiResponse::updated($testExecution, 'Test execution updated successfully');
+                $testExecution->update($validated);
+                $testExecution->load(['testCase', 'version', 'user']);
+
+                return ApiResponse::updated($testExecution, 'Test execution updated successfully');
+            }
+
+            return ApiResponse::error('Failed to update test execution', 500, 'Unauthorized');
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to update test execution', 500, $e->getMessage());
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         try {
             $testExecution = TestExecution::findOrFail($id);
-            $testExecution->delete();
 
-            return ApiResponse::deleted('Test execution deleted successfully');
+            if($request->user()->rol !== 'tester' || $request->user()->id === $testExecution->user_id) {
+                $testExecution->delete();
+                return ApiResponse::deleted('Test execution deleted successfully');
+            }
+
+            return ApiResponse::error('Failed to delete test execution', 500, 'Unauthorized');
+
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to delete test execution', 500, $e->getMessage());
         }

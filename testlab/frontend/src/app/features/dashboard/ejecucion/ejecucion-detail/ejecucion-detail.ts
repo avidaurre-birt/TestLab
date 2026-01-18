@@ -146,10 +146,12 @@ export class EjecucionDetail {
               )
             );
             this._toastService.show('Ejecución actualizada correctamente', 'success');
+            this.resetearFormulario();
           },
           error: (err) => {
             console.error('Error actualizando ejecución:', err);
             this._toastService.show('Error actualizando ejecución', 'error');
+            this.resetearFormulario();
           }
         });
       } else if (this.modo() === 'nuevo') {
@@ -163,6 +165,7 @@ export class EjecucionDetail {
           next: (datos) => {
             this.listado.update((listado) => ([...listado, datos.data]));
             this._toastService.show('Ejecución creada correctamente', 'success');
+            this.resetearFormulario();
           },
           error: (err) => {
             console.error('Error creando ejecución:', err);
@@ -177,8 +180,6 @@ export class EjecucionDetail {
         this.form.reset(); 
         modal?.hide();
       }
-
-      this.resetearFormulario();
     }
   }
 
