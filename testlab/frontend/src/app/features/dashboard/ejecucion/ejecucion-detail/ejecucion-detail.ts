@@ -50,7 +50,7 @@ export class EjecucionDetail {
     effect(() => {
       if(this.modo() == 'nuevo') {
         console.log('Reseteo del formulario de ejecucion-detail');
-        this.resetearFormulario();
+        this.resetFormForNew();
       }
       
       
@@ -63,7 +63,7 @@ export class EjecucionDetail {
 
   /*** Recuperación de versión ***/
   getEjecucionById(id: string): void {
-    this.resetearFormulario();
+    this.resetFormForNew();
     this._ejecucionService.getEjecucionById(id).subscribe({
       next: (datos) => {
 
@@ -108,10 +108,12 @@ export class EjecucionDetail {
           list.filter(e => e.id !== id)
         );
         this._toastService.show('Ejecución eliminada correctamente', 'success');
+        this.resetFormForNew();
       },
       error: error => {
         console.log("Error: ", error);
         this._toastService.show('Error eliminando ejecución', 'error');
+        this.resetFormForNew();
       }
     });
   }
@@ -144,10 +146,12 @@ export class EjecucionDetail {
               )
             );
             this._toastService.show('Ejecución actualizada correctamente', 'success');
+            this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error actualizando ejecución:', err);
             this._toastService.show('Error actualizando ejecución', 'error');
+            this.resetFormForNew();
           }
         });
       } else if (this.modo() === 'nuevo') {
@@ -161,10 +165,12 @@ export class EjecucionDetail {
           next: (datos) => {
             this.listado.update((listado) => ([datos.data, ...listado]));
             this._toastService.show('Ejecución creada correctamente', 'success');
+            this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error creando ejecución:', err);
             this._toastService.show('Error creando ejecución', 'error');
+            this.resetFormForNew();
           }
         });
       }
@@ -207,9 +213,29 @@ export class EjecucionDetail {
     return 'Unknown';
   }
 
-  resetearFormulario() {
-    this.form.reset({
-        executed_at: this.toISOStringLocal(),
+  // resetearFormulario() {
+  //   this.form.reset({
+  //       executed_at: this.toISOStringLocal(),
+  //   });
+  // }
+
+  resetFormForNew(): void {
+    this.form.patchValue({
+      result: '',
+      comment: '',
+      test_data: [],
+      error_status: '',
+      correction_notes: '',
+      observations: '',
+      executed_at: this.toISOStringLocal(),
+      version_number: '',
+      release_date: '',
+      description: '',
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
     });
   }
 }

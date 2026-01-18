@@ -52,7 +52,7 @@ export class UsuarioDetail {
     effect(() => {
 
       this.loading = true;
-      this.resetearFormulario();
+      this.resetFormForNew();
       if (this.usuarioId() != null) {
         console.log('Cambia el usuario');
         this.getUsuarioById(this.usuarioId()!);
@@ -69,7 +69,7 @@ export class UsuarioDetail {
 
     effect(() => {
       if (this.role() !== 'admin') {
-        this.form.disable();   // 🔥 Bloquea todos los campos
+        this.form.disable();   // Bloquea todos los campos
       } else {
         this.form.enable();    // Admin/manager pueden editar
       }
@@ -78,7 +78,7 @@ export class UsuarioDetail {
 
   /*** Recuperación de Usuario ***/
   getUsuarioById(id: string): void {
-    this.resetearFormulario();
+    this.resetFormForNew();
     this._usuarioService.getUsuarioById(id, { silent: true }).subscribe({
       next: (datos) => {
         console.log(datos);
@@ -145,10 +145,12 @@ export class UsuarioDetail {
               )
             );
             this._toastService.show('Usuario actualizado correctamente', 'success');
+            this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error actualizando usuario:', err);
             this._toastService.show('Error actualizando usuario', 'error');
+            this.resetFormForNew();
           }
         });
       } else if (this.modo() === 'nuevo') {
@@ -162,16 +164,19 @@ export class UsuarioDetail {
                     .subscribe(() => {
                       this.listado.update(list => [...list, nuevoUsuario]);
                       this._toastService.show('Usuario creado y asociado correctamente', 'success');
+                      this.resetFormForNew();
                     });
                 } else {
                   // Si no hay proyecto, solo añadir al listado
                   this.listado.update(list => [...list, nuevoUsuario]);
                   this._toastService.show('Usuario creado correctamente', 'success');
+                  this.resetFormForNew();
                 }
               },
           error: (err) => {
             console.error('Error creando usuario:', err);
             this._toastService.show('Error creando usuario', 'error');
+            this.resetFormForNew();
           }
         });
       }
@@ -186,8 +191,19 @@ export class UsuarioDetail {
     return this.form.controls;
   }
 
-  resetearFormulario() {
-    this.form.reset();
+
+  resetFormForNew(): void {
+    this.form.patchValue({
+      name: '',
+      email: '',
+      password: '',
+      rol: '',
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
   }
 
 }

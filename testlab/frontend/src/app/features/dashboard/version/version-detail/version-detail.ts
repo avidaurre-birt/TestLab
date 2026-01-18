@@ -41,7 +41,6 @@ export class VersionDetail {
     effect(() => {
       if (this.versionId() != null) {
         console.log('Cambia la versión', this.versionId());
-        this.resetearFormulario();
         this.getVersionById(this.versionId()!);
       }
 
@@ -56,14 +55,14 @@ export class VersionDetail {
       }
 
       if (this.modo() === 'nuevo') {
-        this.resetearFormulario();
+        this.resetFormForNew();
       }
     });
   }
 
   /*** Recuperación de versión ***/
   getVersionById(id: string): void {
-    this.resetearFormulario();
+    this.resetFormForNew();
 
     this._versionService.getVersionById(id).subscribe({
       next: (datos) => {
@@ -126,21 +125,26 @@ export class VersionDetail {
               )
             );
             this._toastService.show('Versión actualizada correctamente', 'success');
+            // this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error actualizando versión:', err);
             this._toastService.show('Error actualizando versión', 'error');
+            // this.resetFormForNew();
           }
         });
       } else if (this.modo() === 'nuevo') {
+        this.form.value.project_id = this.projectId();
         this._versionService.createVersion(this.form.value).subscribe({
           next: (datos) => {
             this.listado.update((listado) => ([...listado, datos.data]));
             this._toastService.show('Versión creada correctamente', 'success');
+            // this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error creando versión:', err);
             this._toastService.show('Error creando versión', 'error');
+            // this.resetFormForNew();
           }
         });
       }
@@ -157,7 +161,21 @@ export class VersionDetail {
     return this.form.controls;
   }
 
-  resetearFormulario() {
-    this.form.reset();
+  // resetearFormulario() {
+  //   this.form.reset();
+  // }
+
+  resetFormForNew(): void {
+    this.form.patchValue({
+      version_number: '',
+      release_date: '',
+      description: '',
+      project_id: this.projectId() ?? ''
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
   }
 }

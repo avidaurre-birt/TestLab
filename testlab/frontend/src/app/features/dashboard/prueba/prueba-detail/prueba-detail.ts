@@ -59,7 +59,7 @@ export class PruebaDetail {
       expected_result: ['', [Validators.required, Validators.minLength(10)]],
       rol: ['', Validators.required],
       project_id: ['', Validators.required],
-      version_ids: [[], Validators.required]   // 👈 CORRECTO
+      version_ids: [[], Validators.required]   // CORRECTO
     });
 
     effect(() => {
@@ -69,12 +69,12 @@ export class PruebaDetail {
 
       if (this.modo() === 'nuevo') {
         this.loading = false;
-        this.resetearFormulario();
+        this.resetFormForNew();
       }
     });
     effect(() => {
       if (this.role() === 'tester') {
-        this.form.disable();   // 🔥 Bloquea todos los campos
+        this.form.disable();   // Bloquea todos los campos
       } else {
         this.form.enable();    // Admin/manager pueden editar
       }
@@ -113,7 +113,7 @@ export class PruebaDetail {
   /*** Cargar prueba ***/
   getItemById(id: string): void {
     this.loading = true;
-    this.resetearFormulario();
+    this.resetFormForNew();
 
     this._pruebaService.getPruebaById(id, { silent: true }).subscribe({
       next: (res) => {
@@ -248,16 +248,24 @@ export class PruebaDetail {
             list.map(item => item.id === this.pruebaId() ? { ...item, ...payload } : item)
           );
           this._toastService.show('Prueba actualizada correctamente', 'success');
+          this.resetFormForNew();
         },
-        error: () => this._toastService.show('Error actualizando la prueba', 'error')
+        error: () => {
+          this._toastService.show('Error actualizando la prueba', 'error');
+          this.resetFormForNew();
+        }
       });
     } else {
       this._pruebaService.createPrueba(payload).subscribe({
         next: (res) => {
           this.listado.update(list => [...list, res.data]);
           this._toastService.show('Prueba creada correctamente', 'success');
+          this.resetFormForNew();
         },
-        error: () => this._toastService.show('Error creando la prueba', 'error')
+        error: () => {
+          this._toastService.show('Error creando la prueba', 'error');
+          this.resetFormForNew();
+        }
       });
     }
 
@@ -269,8 +277,8 @@ export class PruebaDetail {
     return this.form.controls;
   }
 
-  resetearFormulario() {
-    this.form.reset({
+  resetFormForNew(): void {
+    this.form.patchValue({
       title: '',
       objective: '',
       preconditions: '',
@@ -279,6 +287,11 @@ export class PruebaDetail {
       rol: '',
       project_id: '',
       version_ids: []
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
     });
   }
 }
