@@ -11,7 +11,7 @@
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400; /* Adjust weight as needed */
-    src: url('../public/fonts/Inter-Regular.woff2') format('woff2');
+    src: url('assets/fonts/Inter-Regular.woff2') format('woff2');
     font-display: swap;
 }
 
@@ -20,7 +20,7 @@
     font-family: 'Inter';
     font-style: italic;
     font-weight: 400; /* Match the regular weight */
-    src: url('../public/fonts/Inter-Italic.woff2') format('woff2');
+    src: url('assets/fonts/Inter-Italic.woff2') format('woff2');
     font-display: swap;
 }
 
@@ -29,7 +29,7 @@
     font-family: 'Inter';
     font-style: normal;
     font-weight: 700; /* Bold weight */
-    src: url('../public/fonts/Inter-Bold.woff2') format('woff2');
+    src: url('assets/fonts/Inter-Bold.woff2') format('woff2');
     font-display: swap;
 }
 
@@ -38,7 +38,7 @@
     font-family: 'Inter';
     font-style: italic;
     font-weight: 700; /* Bold italic weight */
-    src: url('../public/fonts/Inter-BoldItalic.woff2') format('woff2');
+    src: url('assets/fonts/Inter-BoldItalic.woff2') format('woff2');
     font-display: swap;
 }
 
