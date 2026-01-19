@@ -9,7 +9,7 @@
         Debe comenzar con <strong>v</strong> y seguir de números. Ejemplos válidos: <code>v1</code>, <code>v1.0</code>, <code>v2.3.5</code>
       </small>
     </label>
-    <input id="version_number" type="text" name="version_number" class="form-control" formControlName="version_number" pattern="v[0-9][0-9\.]+[0-9]" required minlength="2">
+    <input id="version_number" type="text" name="version_number" class="form-control" formControlName="version_number" pattern="v[0-9]+(\.[0-9]+)*" required minlength="2">
     <div>
       @if (
             this.form.get('version_number')?.invalid && 

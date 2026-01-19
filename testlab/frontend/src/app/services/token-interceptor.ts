@@ -35,10 +35,6 @@ export class TokenInterceptor implements HttpInterceptor {
       this.spinner.show();
     }
 
-
-
-
-
     // Añadir token si existe
     let cloned = req;
     if (token) {
