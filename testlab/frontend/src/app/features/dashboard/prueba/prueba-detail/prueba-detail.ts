@@ -141,7 +141,6 @@ export class PruebaDetail {
               project_id: '',
               version_ids: []
             });
-            console.log(this.form);
 
             this.loading = false;
             return;

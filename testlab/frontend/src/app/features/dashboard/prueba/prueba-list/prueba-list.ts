@@ -41,7 +41,6 @@ export class PruebaList {
   obtenerPruebas(): void {
     this._pruebaservice.getPruebas().subscribe({
       next: (response) => {
-        console.log('Response:', response);
         this.pruebas = response;
         this.pruebasFiltradas = response;
 
@@ -88,11 +87,9 @@ export class PruebaList {
 
 
   listadoChange($e: any) {
-    console.log('Listado ha cambiado:', this.pruebas);
     this.pruebasFiltradas = [];
     for (const i of this.pruebas) {
       if (this._filtro !== '') {
-        console.log("El filtro es:", this._filtro);
         if (
           i.title.toLowerCase().includes(this._filtro.toLowerCase()) ||
           i.objective.toLowerCase().includes(this._filtro.toLowerCase()) ||

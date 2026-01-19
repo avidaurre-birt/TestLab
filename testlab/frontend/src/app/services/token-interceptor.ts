@@ -53,7 +53,6 @@ export class TokenInterceptor implements HttpInterceptor {
 
           // 🔴 Backend caído / sin conexión
           if (error.status === 0) {
-            console.log('ERROR INTERCEPTOR:', error);
             this.toast.show('No se puede conectar con el servidor', 'error');
             return throwError(() => error);
           }
@@ -102,7 +101,6 @@ export class TokenInterceptor implements HttpInterceptor {
       
       // Se ejecuta SIEMPRE: éxito o error
       finalize(() => {
-        console.log('Finalize');
         
         // setTimeout(() => this.spinner.hide(), 150); // Tiempo para renderizar
         this.spinner.hide();

@@ -69,7 +69,6 @@ export class ProyectoList implements OnInit {
         });
 
         this.proyectosFiltrados = this.proyectos;
-        console.log("Tenemos los proyectos: ", this.proyectos);
       }
     });
   }
@@ -102,11 +101,9 @@ export class ProyectoList implements OnInit {
   }
 
    listadoChange($e: any) {
-    console.log('Listado ha cambiado:', this.proyectos);
     this.proyectosFiltrados = [];
     for (const p of this.proyectos) {
       if (this._filtro !== '') {
-        console.log("El filtro es:", this._filtro);
         if (
           p.name.toLowerCase().includes(this._filtro.toLowerCase()) ||
           p.description.toLowerCase().includes(this._filtro.toLowerCase()) ||

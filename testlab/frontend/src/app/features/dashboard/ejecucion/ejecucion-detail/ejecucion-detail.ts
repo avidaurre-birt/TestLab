@@ -32,9 +32,7 @@ export class EjecucionDetail {
     private fb: FormBuilder,
     private _toastService: ToastService
   ) {
-    console.log('ID ejecucion en ejecucion-detail: ', this.ejecucionId());
-    console.log('Modo en ejecucion-detail: ', this.modo());
-    console.log('Browser en ejecucion-detail: ', this.browser);
+
     this.form = this.fb.group({
       result: ['', [Validators.required, Validators.pattern('passed|failed')]],
       comment: ['', [Validators.required]],
@@ -45,17 +43,14 @@ export class EjecucionDetail {
       executed_at: [this.toISOStringLocal()],
     });
 
-    console.log('EjecucionDetail, modo: ', this.modo());
 
     effect(() => {
       if(this.modo() == 'nuevo') {
-        console.log('Reseteo del formulario de ejecucion-detail');
         this.resetFormForNew();
       }
       
       
       if (this.ejecucionId() != null && this.modo() === 'editar') {
-        console.log('Cambia la ejecucion', this.ejecucionId());
         this.getEjecucionById(this.ejecucionId()!);
       }
     });
@@ -67,11 +62,9 @@ export class EjecucionDetail {
     this._ejecucionService.getEjecucionById(id).subscribe({
       next: (datos) => {
 
-        console.log(datos);
         this.ejecucion = datos.data;
 
         const tiempoEjecucion = String(this.ejecucion?.executed_at?.substring(0, 16));
-        console.log(tiempoEjecucion);
         this.form.patchValue({
           result: this.ejecucion?.result,
           comment: this.ejecucion?.comment,
@@ -103,7 +96,6 @@ export class EjecucionDetail {
 
     this._ejecucionService.deleteEjecucion(id).subscribe({
       next: data => {
-        console.log("OK: ", data);
         this.listado.update(list =>
           list.filter(e => e.id !== id)
         );
@@ -111,7 +103,6 @@ export class EjecucionDetail {
         this.resetFormForNew();
       },
       error: error => {
-        console.log("Error: ", error);
         this._toastService.show('Error eliminando ejecución', 'error');
         this.resetFormForNew();
       }
@@ -120,11 +111,6 @@ export class EjecucionDetail {
 
   onSubmit() {
     if (this.form.valid) {
-
-      // console.log('Valores formulario', this.form.value);
-      // console.log('userId: ', this.userId());
-      // console.log('versionId: ', this.versionId());
-      // console.log('pruebaId: ', this.pruebaId());
 
       this.form.value.test_case_id = this.pruebaId();
       this.form.value.version_id = this.versionId();
@@ -197,7 +183,6 @@ export class EjecucionDetail {
           normalizarFecha(d.getDate()) + 'T' + normalizarFecha(d.getHours()) + ':' +
           normalizarFecha(d.getMinutes());
 
-    console.log('Fecha de toISOStringLocal: ', fecha);
   
     return fecha;
   }

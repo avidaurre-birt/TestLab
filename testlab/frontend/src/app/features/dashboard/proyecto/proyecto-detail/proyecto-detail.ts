@@ -124,7 +124,6 @@ export class ProyectoDetail {
     this._route.paramMap.subscribe(params => {
       const id = params.get('id');
       this.proyectoId.set(id);
-      console.log('proyecto-detail - proyectoId: ', this.proyectoId());
 
       if (id) {
         this.cargarDetalle(id);
@@ -180,11 +179,9 @@ export class ProyectoDetail {
     )
     .subscribe({
       next: (proyecto) => {
-        console.log('Proyecto cargado EDITADO:', proyecto);
         this.proyecto.set(proyecto);
       },
       error: (error) => {
-        console.log('Error: ', error);
         this._toastService.show('No se pudo cargar el proyecto', 'error');
         this._router.navigate(['/proyecto']);
       }
@@ -224,7 +221,6 @@ export class ProyectoDetail {
   }
 
   proyectoChange($e: any) {
-    console.log('Proyecto editado en proyecto-detail.ts:', this.proyecto);
     this.cargarProyecto(this.proyectoId()!);
   }
 
@@ -248,15 +244,13 @@ export class ProyectoDetail {
 
     if (!id) return;                // seguridad: evitar null
 
-    console.log('Disociando usuario', id, idUsuario);
-    console.log('usuarios pre', this.usuarios);
+
 
     this._proyectoService.unlinkUsuarioFromProyecto(id, idUsuario).subscribe({
     next: () => {
         this._toastService.show('Usuario eliminado del proyecto', 'success');
       // Recargar SOLO los usuarios
       this.usuarios = this.usuarios.filter(u => u.id !== idUsuario);
-      console.log('usuarios post', this.usuarios);
       },
       error: (err) => {
         console.error('Error disociando usuario del proyecto:', err);
@@ -304,6 +298,7 @@ export class ProyectoDetail {
   }
 
   listadoVersionesChange($e: any){
+    
     console.log('Listado de versiones ha cambiado:', this.versiones);
     for (const v of this.versiones) {
       //
@@ -382,7 +377,6 @@ export class ProyectoDetail {
     this.pruebaSelId = pruebaId;
     this.ejecucionSelId.set(ejecucionId);
     this.nuevaEjecucion = false;
-    console.log('VersionId: ', versionId);
 
     let versionNumber = this.versiones.find((version) => version.id == String(versionId))?.version_number;
     let tituloPrueba = this.pruebas.find((prueba) => prueba.id == String(pruebaId))?.title;

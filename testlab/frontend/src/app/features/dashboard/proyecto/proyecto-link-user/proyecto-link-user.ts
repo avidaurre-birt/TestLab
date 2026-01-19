@@ -38,7 +38,6 @@ export class ProyectoLinkUser {
     
     this._usuarioService.getUsuarios().subscribe({
       next: (datos) => {
-        console.log(datos);
         this.usuarios = datos;
       }
     })
@@ -65,10 +64,8 @@ export class ProyectoLinkUser {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
       this._proyectoService.linkUsuarioToProyecto(this.proyectoId()!, this.form.value.userId).subscribe({
         next: (datos) => {
-          console.log(datos.data.users);
           this.listado.update(lista => datos.data.users);
           this._toastService.show('Usuario asociado correctamente', 'success');
         },

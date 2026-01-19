@@ -40,7 +40,6 @@ export class UsuarioService {
 
     this.getUsuarioById(id).subscribe({
       next: (response) => {
-        console.log('Respuesta _usuarioService: ', response);
         return response.data.rol;
       },
       error: () => {
@@ -52,7 +51,6 @@ export class UsuarioService {
   }
 
   createUsuario(dto: CreateUsuarioDto): Observable<any> {
-    console.log('DTO Usuario: ', dto);
     return this.http.post(this.apiUrl + this.endpoint, dto);
   }
 
@@ -64,7 +62,6 @@ export class UsuarioService {
     return this.http.delete(`${this.apiUrl + this.endpoint}/${id}`);
   }
   asociarUsuarioAProyecto(proyectoId: string, usuarioId: string): Observable<any> {
-    console.log('asociarUsuarioAProyecto', proyectoId, usuarioId);
     return this.http.post(`${this.apiUrl}/projects/${proyectoId}/users/${usuarioId}`, {});
   }
 }

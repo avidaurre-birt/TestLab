@@ -30,7 +30,6 @@ export class VersionDetail {
     private fb: FormBuilder,
     private _toastService: ToastService
   ) {
-    console.log('ID proyecto inicial: ', this.projectId());
     this.form = this.fb.group({
       version_number: ['', [Validators.required, Validators.minLength(2)]],
       release_date: ['', [Validators.required]],
@@ -40,12 +39,10 @@ export class VersionDetail {
 
     effect(() => {
       if (this.versionId() != null) {
-        console.log('Cambia la versión', this.versionId());
         this.getVersionById(this.versionId()!);
       }
 
       if (this.projectId() != null) {
-        console.log('Cambia projectId', this.projectId());
         this.form.setValue({
           version_number: '',
           release_date: '',
@@ -67,7 +64,6 @@ export class VersionDetail {
     this._versionService.getVersionById(id).subscribe({
       next: (datos) => {
 
-        console.log(datos);
         this.version = datos;
 
         this.form.patchValue({
@@ -98,14 +94,12 @@ export class VersionDetail {
 
     this._versionService.deleteVersion(id).subscribe({
       next: data => {
-        console.log("OK: ", data);
         this.listado.update(list =>
           list.filter(v => v.id !== id)
         );
         this._toastService.show('Versión eliminada correctamente', 'success');
       },
       error: error => {
-        console.log("Error: ", error);
         this._toastService.show('Error eliminando versión', 'error');
       }
     });

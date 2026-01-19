@@ -98,7 +98,6 @@ export class ProyectoNew {
               // Actualiza signal proyecto
               this.proyecto.update(objeto => ({ ...res.data}));
 
-              console.log('Proyecto editado en proyecto-new.ts: ', this.proyecto());
 
 
               this._toastService.show('Proyecto actualizado correctamente', 'success');

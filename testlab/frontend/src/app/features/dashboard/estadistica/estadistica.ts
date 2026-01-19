@@ -85,10 +85,8 @@ public successRates: SuccessRatesResponse['data'] = {
 
       // Con un criterio de 70% para ratio y un 30% para el número de test sobre el total del proyecto
       const maxTotal = Math.max(...this.projectStats.map(p => p.total));
-      console.log("Project stats:", this.projectStats);
       this.updateTopProjects();
 
-      console.log(this.top3Projects);
 
       this.top3Projects.forEach(project => {
         console.log(project.name);
@@ -102,7 +100,6 @@ public successRates: SuccessRatesResponse['data'] = {
         .sort((a, b) => b.executed - a.executed)
         .slice(0, 4);
 
-      console.log(this.top4Users);
 
       // Dashboard
       this.dashboard = main.data.dashboard;
@@ -171,11 +168,9 @@ updateTopProjects() {
     if (this.graficoEvolucion) this.graficoEvolucion.destroy();
 
     const labels = this.evolution.map(m => `${this.getMonthName(Number(m.month))} ${m.year}`);
-    console.log(labels);
     const passed = this.evolution.map(m => m.passed);
     const failed = this.evolution.map(m => m.failed);
-    console.log(passed);
-    console.log(failed);
+
 
 
 

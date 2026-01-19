@@ -54,7 +54,6 @@ export class UsuarioDetail {
       this.loading = true;
       this.resetFormForNew();
       if (this.usuarioId() != null) {
-        console.log('Cambia el usuario');
         this.getUsuarioById(this.usuarioId()!);
       }
 
@@ -81,7 +80,6 @@ export class UsuarioDetail {
     this.resetFormForNew();
     this._usuarioService.getUsuarioById(id, { silent: true }).subscribe({
       next: (datos) => {
-        console.log(datos);
         this.usuario = datos.data;
         this.form.setValue({
           name: this.usuario?.name,
@@ -118,14 +116,12 @@ export class UsuarioDetail {
 
     this._usuarioService.deleteUsuario(id).subscribe({
       next: data => {
-        console.log("OK: ", data);
         this.listado.update(list =>
           list.filter(u => u.id !== id)
         );
         this._toastService.show('Usuario eliminado correctamente', 'success');
       },
       error: error => {
-        console.log("Error: ", error);
         this._toastService.show('Error eliminando usuario', 'error');
       }
     });
