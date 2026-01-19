@@ -106,26 +106,23 @@ export class VersionDetail {
   }
 
   onSubmit() {
-    if (this.form.valid) {
+if (this.form.valid) {
+    if (this.modo() === 'editar' && this.versionId()) {
+      // 1. Nos suscribimos y capturamos la respuesta (suponiendo que updateVersion devuelve la versión)
+      this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
+        next: (response: any) => { 
+          // 2. Usamos los datos reales que vienen del servidor (response.data)
+          const versionActualizada = response.data; 
 
-      if (this.modo() === 'editar' && this.versionId()) {
-        this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
-          next: () => {
-            this.listado.update(list =>
-              list.map(v =>
-                v.id === this.versionId()
-                  ? { ...this.form.value, id: this.versionId() }
-                  : v
-              )
-            );
-            this._toastService.show('Versión actualizada correctamente', 'success');
-            // this.resetFormForNew();
-          },
-          error: (err) => {
-            console.error('Error actualizando versión:', err);
-            this._toastService.show('Error actualizando versión', 'error');
-            // this.resetFormForNew();
-          }
+          this.listado.update(list =>
+            list.map(v => v.id === this.versionId() ? versionActualizada : v)
+          );
+
+          this._toastService.show('Versión actualizada correctamente', 'success');
+        },
+        error: (err) => {
+          this._toastService.show('Error actualizando versión', 'error');
+        }
         });
       } else if (this.modo() === 'nuevo') {
         this.form.value.project_id = this.projectId();
