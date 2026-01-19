@@ -293,6 +293,8 @@ export class ProyectoDetail {
       next: () => {
         this._toastService.show('Versión eliminada correctamente', 'success');
         this.versiones = this.versiones.filter(v => v.id !== this.versionSelId);
+        this.cargarDetalle(this.proyectoId()!);
+
       },
       error: (err) => {
         console.error('Error eliminando versión:', err);
