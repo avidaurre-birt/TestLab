@@ -133,13 +133,13 @@
     <!-- BOTONES -->
     @if (modo() === 'detalle') {
       <div class="d-flex justify-content-evenly mt-5">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-danger" (click)="borrar(pruebaId())" data-bs-dismiss="modal">Eliminar prueba</button>
+        <button type="button" class="btn btn-secondary" (click)="this.resetFormForNew()" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="borrar(pruebaId())" data-bs-dismiss="modal">Eliminar prueba</button>
         <button type="submit" class="btn btn-primary" [disabled]="form.invalid" data-bs-dismiss="modal">Guardar cambios</button>
       </div>
     } @else {
       <div class="d-flex justify-content-evenly mt-5">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-secondary" (click)="this.resetFormForNew()" data-bs-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-success" [disabled]="form.invalid" data-bs-dismiss="modal">Crear prueba</button>
       </div>
     }

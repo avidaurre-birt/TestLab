@@ -62,7 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/test-executions', [TestExecutionController::class, 'store'])->middleware(['role:admin,manager,tester']); // Crear testExecution
     Route::get('/test-executions/{id}', [TestExecutionController::class, 'show'])->middleware(['role:admin,manager,tester']); // Ver un testExecution
     Route::put('/test-executions/{id}', [TestExecutionController::class, 'update'])->middleware(['role:admin,manager,tester']); // Actualizar testexecution
-    Route::delete('/test-executions/{id}', [TestExecutionController::class, 'destroy'])->middleware(['role:admin,manager']); // Eliminar testexecution
+    Route::delete('/test-executions/{id}', [TestExecutionController::class, 'destroy'])->middleware(['role:admin,manager,tester']); // Eliminar testexecution
 
     Route::get('/test-executions/statistics', [TestExecutionController::class, 'statistics'])->middleware('role:admin,manager,tester'); // Obtiene estadísticas generales de ejecuciones
     Route::get('/test-executions/report/{version_id}', [TestExecutionController::class, 'report'])->middleware('role:admin,manager,tester'); // Reporte detallado de una versión

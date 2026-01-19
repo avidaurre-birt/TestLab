@@ -135,9 +135,9 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('✅ Datos de prueba creados:');
         $this->command->info('   - 2 usuarios');
-        $this->command->info('   - 2 proyectos');
-        $this->command->info('   - 2 versiones');
-        $this->command->info('   - 2 test cases');
-        $this->command->info('   - 3 test executions');
+        // $this->command->info('   - 2 proyectos');
+        // $this->command->info('   - 2 versiones');
+        // $this->command->info('   - 2 test cases');
+        // $this->command->info('   - 3 test executions');
     }
 }

@@ -54,16 +54,16 @@ export class VersionDetail {
         });
       }
 
-      // if (this.modo() === 'nuevo') {
-      //   this.resetFormForNew();
-      // }
-
+      if (this.modo() === 'nuevo') {
+        this.resetFormForNew();
+      }
     });
   }
 
   /*** Recuperación de versión ***/
   getVersionById(id: string): void {
-    console.log('En propiedad getVersionById');
+    this.resetFormForNew();
+
     this._versionService.getVersionById(id).subscribe({
       next: (datos) => {
 
@@ -114,8 +114,6 @@ export class VersionDetail {
   onSubmit() {
     if (this.form.valid) {
 
-      console.log('Valores formulario', this.form.value);
-
       if (this.modo() === 'editar' && this.versionId()) {
         this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
           next: () => {
@@ -127,21 +125,26 @@ export class VersionDetail {
               )
             );
             this._toastService.show('Versión actualizada correctamente', 'success');
+            // this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error actualizando versión:', err);
             this._toastService.show('Error actualizando versión', 'error');
+            // this.resetFormForNew();
           }
         });
       } else if (this.modo() === 'nuevo') {
+        this.form.value.project_id = this.projectId();
         this._versionService.createVersion(this.form.value).subscribe({
           next: (datos) => {
             this.listado.update((listado) => ([...listado, datos.data]));
             this._toastService.show('Versión creada correctamente', 'success');
+            // this.resetFormForNew();
           },
           error: (err) => {
             console.error('Error creando versión:', err);
             this._toastService.show('Error creando versión', 'error');
+            // this.resetFormForNew();
           }
         });
       }
@@ -160,17 +163,21 @@ export class VersionDetail {
     return this.form.controls;
   }
 
-  private resetFormForNew(): void {
-  this.form.patchValue({
-    version_number: '',
-    release_date: '',
-    description: '',
-    project_id: this.projectId() ?? ''
-  });
+  // resetearFormulario() {
+  //   this.form.reset();
+  // }
 
-  Object.values(this.form.controls).forEach(control => {
-    control.markAsPristine();
-    control.markAsUntouched();
-  });
-}
+  resetFormForNew(): void {
+    this.form.patchValue({
+      version_number: '',
+      release_date: '',
+      description: '',
+      project_id: this.projectId() ?? ''
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
+  }
 }

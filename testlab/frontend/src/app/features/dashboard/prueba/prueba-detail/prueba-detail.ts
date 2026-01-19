@@ -5,7 +5,7 @@ import { PruebaService } from '../../../../services/prueba-service';
 import { ProyectoService } from '../../../../services/proyecto-service';
 import { VersionService } from '../../../../services/version-service';
 import { Router } from '@angular/router';
-import { Modal } from 'bootstrap';
+import { Modal, Toast } from 'bootstrap';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../../layout/shared/toast/toast';
 import { Version } from '../../../../models/version';
@@ -59,7 +59,7 @@ export class PruebaDetail {
       expected_result: ['', [Validators.required, Validators.minLength(10)]],
       rol: ['', Validators.required],
       project_id: ['', Validators.required],
-      version_ids: [[], Validators.required]   // 👈 CORRECTO
+      version_ids: [[], Validators.required]   // CORRECTO
     });
 
     effect(() => {
@@ -69,21 +69,14 @@ export class PruebaDetail {
 
       if (this.modo() === 'nuevo') {
         this.loading = false;
-        this.form.reset({
-          title: '',
-          objective: '',
-          preconditions: '',
-          steps: '',
-          expected_result: '',
-          rol: '',
-          project_id: '',
-          version_ids: []
-        });
+        this.resetFormForNew();
       }
+
+
     });
     effect(() => {
       if (this.role() === 'tester') {
-        this.form.disable();   // 🔥 Bloquea todos los campos
+        this.form.disable();   // Bloquea todos los campos
       } else {
         this.form.enable();    // Admin/manager pueden editar
       }
@@ -122,7 +115,7 @@ export class PruebaDetail {
   /*** Cargar prueba ***/
   getItemById(id: string): void {
     this.loading = true;
-    this.form.reset();
+    this.resetFormForNew();
 
     this._pruebaService.getPruebaById(id, { silent: true }).subscribe({
       next: (res) => {
@@ -132,8 +125,26 @@ export class PruebaDetail {
         const versionId = this.item.versions[0]?.id;
 
         if (!versionId) {
-          console.error('El test case no tiene versiones asociadas');
-          return;
+           this._toastService.show('El test case no tiene versiones asociadas', 'error');
+           this.loading = false;
+
+           this.versions = [];
+           this.form.patchValue({
+              title: this.item.title,
+              objective: this.item.objective,
+              preconditions: this.item.preconditions,
+              steps: Array.isArray(this.item.steps)
+                ? this.item.steps.join('\n')
+                : this.item.steps,
+              expected_result: this.item.expected_result,
+              rol: this.item.user_profile,
+              project_id: '',
+              version_ids: []
+            });
+            console.log(this.form);
+
+            this.loading = false;
+            return;
         }
 
         // ✔ Obtener el proyecto de esa versión
@@ -155,7 +166,7 @@ export class PruebaDetail {
               expected_result: this.item.expected_result,
               rol: this.item.user_profile,
               project_id: projectId,
-              version_ids: this.item.versions.map(v => v.id)   // 👈 CORRECTO
+              version_ids: this.item.versions.map(v => v.id)
             });
 
             Object.values(this.form.controls).forEach(c => {
@@ -257,16 +268,24 @@ export class PruebaDetail {
             list.map(item => item.id === this.pruebaId() ? { ...item, ...payload } : item)
           );
           this._toastService.show('Prueba actualizada correctamente', 'success');
+          this.resetFormForNew();
         },
-        error: () => this._toastService.show('Error actualizando la prueba', 'error')
+        error: () => {
+          this._toastService.show('Error actualizando la prueba', 'error');
+          this.resetFormForNew();
+        }
       });
     } else {
       this._pruebaService.createPrueba(payload).subscribe({
         next: (res) => {
           this.listado.update(list => [...list, res.data]);
           this._toastService.show('Prueba creada correctamente', 'success');
+          this.resetFormForNew();
         },
-        error: () => this._toastService.show('Error creando la prueba', 'error')
+        error: () => {
+          this._toastService.show('Error creando la prueba', 'error');
+          this.resetFormForNew();
+        }
       });
     }
 
@@ -276,5 +295,23 @@ export class PruebaDetail {
 
   get formControls() {
     return this.form.controls;
+  }
+
+  resetFormForNew(): void {
+    this.form.patchValue({
+      title: '',
+      objective: '',
+      preconditions: '',
+      steps: '',
+      expected_result: '',
+      rol: '',
+      project_id: '',
+      version_ids: []
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
   }
 }

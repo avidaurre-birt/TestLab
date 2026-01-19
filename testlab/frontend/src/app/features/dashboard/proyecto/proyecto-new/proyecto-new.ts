@@ -37,7 +37,10 @@ export class ProyectoNew {
       status: ['', [Validators.required]],
     });
 
+    this.resetFormForNew();
+
     effect(() => {
+      this.resetFormForNew();
       if (this.modo() === 'editar' && this.proyectoId()) { // Obtiene los datos y los muestra en el modal con símbolo de validado
         this._proyectoService.getProyectoById(this.proyectoId()!).subscribe(proyecto => {
           this.form.patchValue({
@@ -99,11 +102,12 @@ export class ProyectoNew {
 
 
               this._toastService.show('Proyecto actualizado correctamente', 'success');
-              // this.cerrarModal();
+              this.resetFormForNew();
             },
             error: (err) => {
               console.error('Error actualizando proyecto:', err);
               this._toastService.show('Error actualizando proyecto', 'error');
+              this.resetFormForNew();
             }
           });
 
@@ -119,10 +123,12 @@ export class ProyectoNew {
         next: (datos) => {
           this.listado.update((listado) => ([...listado, datos.data]));
           this._toastService.show('Proyecto creado correctamente', 'success');
+          this.resetFormForNew();
         },
         error: (err) => {
           console.error('Error creando proyecto:', err);
           this._toastService.show('Error creando proyecto', 'error');
+          this.resetFormForNew();
         }
       });
 
@@ -132,7 +138,7 @@ export class ProyectoNew {
         modal?.hide();
       }
 
-      this.resetearFormulario();
+      
     }
   }
 
@@ -140,8 +146,17 @@ export class ProyectoNew {
     return this.form.controls;
   }
 
-  resetearFormulario() {
-    this.form.reset();
+  resetFormForNew(): void {
+    this.form.patchValue({
+      name: '',
+      description: '',
+      status: '',
+    });
+
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
   }
 
 }
