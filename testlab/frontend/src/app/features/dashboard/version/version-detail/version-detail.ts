@@ -106,39 +106,39 @@ export class VersionDetail {
   }
 
   onSubmit() {
-if (this.form.valid) {
-    if (this.modo() === 'editar' && this.versionId()) {
-      // 1. Nos suscribimos y capturamos la respuesta (suponiendo que updateVersion devuelve la versión)
-      this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
-        next: (response: any) => { 
-          // 2. Usamos los datos reales que vienen del servidor (response.data)
-          const versionActualizada = response.data; 
+  if (this.form.valid) {
+      if (this.modo() === 'editar' && this.versionId()) {
+        // 1. Nos suscribimos y capturamos la respuesta (suponiendo que updateVersion devuelve la versión)
+        this._versionService.updateVersion(this.versionId()!, this.form.value).subscribe({
+          next: (response: any) => { 
+            // 2. Usamos los datos reales que vienen del servidor (response.data)
+            const versionActualizada = response.data; 
 
-          this.listado.update(list =>
-            list.map(v => v.id === this.versionId() ? versionActualizada : v)
-          );
+            this.listado.update(list =>
+              list.map(v => v.id === this.versionId() ? versionActualizada : v)
+            );
 
-          this._toastService.show('Versión actualizada correctamente', 'success');
-        },
-        error: (err) => {
-          this._toastService.show('Error actualizando versión', 'error');
-        }
-        });
-      } else if (this.modo() === 'nuevo') {
-        this.form.value.project_id = this.projectId();
-        this._versionService.createVersion(this.form.value).subscribe({
-          next: (datos) => {
-            this.listado.update((listado) => ([...listado, datos.data]));
-            this._toastService.show('Versión creada correctamente', 'success');
-            // this.resetFormForNew();
+            this._toastService.show('Versión actualizada correctamente', 'success');
           },
           error: (err) => {
-            console.error('Error creando versión:', err);
-            this._toastService.show('Error creando versión', 'error');
-            // this.resetFormForNew();
+            this._toastService.show('Error actualizando versión', 'error');
           }
-        });
-      }
+          });
+        } else if (this.modo() === 'nuevo') {
+          this.form.value.project_id = this.projectId();
+          this._versionService.createVersion(this.form.value).subscribe({
+            next: (datos) => {
+              this.listado.update((listado) => ([...listado, datos.data]));
+              this._toastService.show('Versión creada correctamente', 'success');
+              // this.resetFormForNew();
+            },
+            error: (err) => {
+              console.error('Error creando versión:', err);
+              this._toastService.show('Error creando versión', 'error');
+              // this.resetFormForNew();
+            }
+          });
+        }
 
       const modalEl = document.getElementById('detalleVersionModal');
       if (modalEl) {
